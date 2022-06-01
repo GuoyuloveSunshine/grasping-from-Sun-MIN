@@ -163,16 +163,18 @@ def get_error_dic(dic):
                 Error_group[Error_name][skl] = {}
     #     print(Error_group)
         
-        mvt_total = []
+        mvt_total = {}
         for i in range(lenlist):
             print("%s, (%d/%d)"%(group, i+1, lenlist))
             path_name = blazepose_list[i]
             mvt = path_name.split('/')[-1].split('-')[-3]
-            if mvt not in mvt_total:
+            if mvt not in mvt_total.keys():
                 for Error_name in list_error:
                     for skl_name in list_sklt:
-                        Error_group[Error_name][skl_name][mvt] = []
-                mvt_total.append(mvt)
+                        Error_group[Error_name][skl_name][mvt] = np.zeros(lenlist)
+                mvt_total[mvt] = 0
+            else:
+                mvt_total[mvt] += 1
             
             open_file = open(openpose_list[i],'r+')
             blaze_file = open(blazepose_list[i],'r+')
@@ -182,10 +184,10 @@ def get_error_dic(dic):
             blaze_file.close()
             kin_file.close()
             for skl in list_sklt:
-                Error_group["Error_blazeOpen_par_mvt"][skl][mvt].append(np.nanmean(Error_blazeOpen_one[skl]))
-                Error_group["Error_KintOpen_par_mvt"][skl][mvt].append(np.nanmean(Error_kinOpen_one[skl]))
-                Error_group["Error_blazeKint_sansP_par_mvt"][skl][mvt].append(np.nanmean(Error_blazeKint_sansP_one[skl]))
-                Error_group["Error_blazeKint_avecP_par_mvt"][skl][mvt].append(np.nanmean(Error_blazeKint_avecP_one[skl]))
+                Error_group["Error_blazeOpen_par_mvt"][skl][mvt][mvt_total[mvt]] = np.nanmean(Error_blazeOpen_one[skl])
+                Error_group["Error_KintOpen_par_mvt"][skl][mvt][mvt_total[mvt]] = np.nanmean(Error_kinOpen_one[skl])
+                Error_group["Error_blazeKint_sansP_par_mvt"][skl][mvt][mvt_total[mvt]] = np.nanmean(Error_blazeKint_sansP_one[skl])
+                Error_group["Error_blazeKint_avecP_par_mvt"][skl][mvt][mvt_total[mvt]] = np.nanmean(Error_blazeKint_avecP_one[skl])
         Error_dic[group] = Error_group
     return Error_dic
 
