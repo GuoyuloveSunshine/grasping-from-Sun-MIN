@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/poppy/Desktop/label_video/keraalSpec.xml" />
+    <video src="C:/Users/poppy/Desktop/label_video/etirementsLaterauxKine/Vid066.avi" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="25">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="25">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="16.666" end="22.399">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+        <comment>semble avoir plus de mal à se pencher à droite. et ne plie pas assez le coude gauche</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="../keraalSpec.xml" />
+    <video src="Vid095.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="26.07">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="26.07">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="5.16" end="26.04">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+        <comment>Exercice incorrect.</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

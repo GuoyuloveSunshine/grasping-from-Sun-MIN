@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/etirementsLaterauxKine/Vid043.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="37.47">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="37.47">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error3</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="7.44" end="13.72">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error3</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+      </el>
+      <el index="1" start="23.16" end="32.92">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error3</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+      </el>
+    </track>
+  </body>
+</annotation>
+

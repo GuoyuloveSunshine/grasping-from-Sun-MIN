@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/cacheTeteKine/Video9.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="24.27">
+        <attribute name="evaluation">Correct</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="24.27" />
+    </track>
+  </body>
+</annotation>
+

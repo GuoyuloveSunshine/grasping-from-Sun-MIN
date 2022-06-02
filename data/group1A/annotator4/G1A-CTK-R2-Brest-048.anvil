@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/cacheTeteKine/Vid048.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="20.53">
+        <attribute name="evaluation">Incorrect</attribute>
+        <comment>L'exercice est incorrect et incomplet (Les deux bras ne sont pas redescendus à la fin de l'exercice.)</comment>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="20.53">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error3</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="3.8" end="7.64">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error3</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+      <el index="1" start="12.48" end="16.36">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error3</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+      <el index="2" start="18.48" end="20.52">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Other</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+        <comment>Les deux bras ne sont pas redescendus à la fin de l'exercice.</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

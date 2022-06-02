@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/cacheTeteKine/Vid061.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="20.13">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="20.13">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error1</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="5.64" end="8.92">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error1</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+      <el index="1" start="12.84" end="15.96">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error1</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+    </track>
+  </body>
+</annotation>
+

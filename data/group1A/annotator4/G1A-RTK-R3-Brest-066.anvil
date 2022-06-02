@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="../keraalSpec.xml" />
+    <video src="Vid066.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="19.67">
+        <attribute name="evaluation">Incomplete</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="19.67">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="4" end="10.32">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+      <el index="1" start="12.88" end="19.32">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+      <el index="2" start="19.4" end="19.64">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Other</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+        <comment>exercice inachevé</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

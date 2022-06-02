@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/poppy/Desktop/label_video/keraalSpec.xml" />
+    <video src="C:/Users/poppy/Desktop/label_video/cacheTeteKine/Vid048.avi" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="20.53">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="20.53">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error1</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+        <comment>et Error3 small et both</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+
