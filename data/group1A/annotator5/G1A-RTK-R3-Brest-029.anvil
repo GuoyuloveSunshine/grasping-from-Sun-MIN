@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Xiaorui/rotationTroncKine/Vid029.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="20.87">
+        <attribute name="evaluation">Incomplete</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="20.87">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="5.96" end="10.36">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+      <el index="1" start="15.24" end="18.52">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">BothArms</attribute>
+      </el>
+    </track>
+  </body>
+</annotation>
+

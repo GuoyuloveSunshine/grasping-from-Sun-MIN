@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/rotationTroncKine/Vid033.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="19.4">
+        <attribute name="evaluation">Incomplete</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="19.4">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="5.64" end="11.56">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+      </el>
+      <el index="1" start="13.48" end="18.36">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+      </el>
+      <el index="2" start="19.2" end="19.36">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Other</attribute>
+        <comment>Les deux bras ne sont pas redescendus à la fin de l'exercice.</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

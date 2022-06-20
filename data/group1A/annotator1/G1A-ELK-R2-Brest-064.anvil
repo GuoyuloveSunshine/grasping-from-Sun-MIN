@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/poppy/Desktop/label_video/keraalSpec.xml" />
+    <video src="C:/Users/poppy/Desktop/label_video/etirementsLaterauxKine/Vid064.avi" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="27.47">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="27.47">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="4.333" end="8.933">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+        <comment>me semble plus marquée à gauche qu'en inclinaison droite</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

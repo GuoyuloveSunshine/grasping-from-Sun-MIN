@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/etirementsLaterauxKine/Vid005.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="30.47">
+        <attribute name="evaluation">Motionless</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="30.47">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="0.16" end="30.44">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+        <comment>immobile</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

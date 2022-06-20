@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/keraalSpec.xml" />
+    <video src="C:/Users/ihsev/Desktop/AnnotationsEte2018/Kone/rotationTroncKine/Vid027.mp4" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="28.6">
+        <attribute name="evaluation">Incomplete</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="28.6">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="4.44" end="6.2">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+        <comment>Exercice "bras tendus en position faciale" non réalisé.</comment>
+      </el>
+      <el index="1" start="22.04" end="28.6">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Other</attribute>
+        <comment>Exercice inachevé.</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

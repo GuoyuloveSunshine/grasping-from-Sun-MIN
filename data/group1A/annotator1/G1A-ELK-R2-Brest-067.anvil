@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/poppy/Desktop/label_video/keraalSpec.xml" />
+    <video src="C:/Users/poppy/Desktop/label_video/etirementsLaterauxKine/Vid067.avi" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="27.67">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="27.67">
+        <attribute name="Evaluation">SmallError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+        <comment>peut être plus marqué à gauche qu'à droite mais difficile à dire</comment>
+      </el>
+    </track>
+  </body>
+</annotation>
+

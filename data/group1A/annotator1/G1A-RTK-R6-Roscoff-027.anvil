@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation>
+  <head>
+    <specification src="C:/Users/poppy/Desktop/label_video/keraalSpec.xml" />
+    <video src="C:/Users/poppy/Desktop/label_video/rotationTroncKine/Vid027.avi" master="true" />
+    <info key="encoding" type="String">UTF-16</info>
+  </head>
+  <body>
+    <track name="Global evaluation" type="primary">
+      <el index="0" start="0" end="28.6">
+        <attribute name="evaluation">Incorrect</attribute>
+      </el>
+    </track>
+    <track name="Global error" type="primary">
+      <el index="0" start="0" end="28.6">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+        <comment>Attention: debut et fin de mouvement non fait: lève les bras en rotation et rabaisse les bras à partir de la dernière rotation aussi.</comment>
+      </el>
+    </track>
+    <track name="Temporal error" type="primary">
+      <el index="0" start="3.733" end="5.799">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+      </el>
+      <el index="1" start="17.599" end="24.933">
+        <attribute name="Evaluation">LargeError</attribute>
+        <attribute name="type">Error2</attribute>
+        <attribute name="bodyPart">Spine</attribute>
+      </el>
+    </track>
+  </body>
+</annotation>
+
