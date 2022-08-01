@@ -39,45 +39,47 @@ class GAN_model(BaseModel):
 
     def forward(self):
         self.offset_repr = self.dataset.offsets
-        self.motion, self.offset_idx = self.motions_input # N*joint*features_in
-        self.motion = self.motion.reshape(self.motion.shape[1:])
-        # self.offset_idx = int(self.offset_idx)
-        # print(self.motion.shape)
+        self.motion, self.offset_idx = self.motions_input # batch_size * frame * joint * features_in
         # latent space
-        self.this_offset = self.offset_repr[self.offset_idx]
-        self.this_offset_enc = torch.concat(self.motion.shape[0]*[self.this_offset]).unsqueeze(-1)
-        # print(self.this_offset_enc.shape)
-        self.latent = self.enc(self.motion, self.this_offset_enc) # may be a problem, don't have the same size as motion 
+        self.offset_idx = self.offset_idx[0]
+        self.true_offset = self.offset_repr[self.offset_idx]
+        # print("true offset: ", self.true_offset.shape)
+        self.true_offset_enc = torch.concat(self.motion.shape[1]*[self.true_offset.unsqueeze(-1).unsqueeze(0)], dim=0) 
+        self.true_offset_enc = torch.concat(self.motion.shape[0]*[self.true_offset_enc.unsqueeze(0)], dim = 0) 
+        # batch_size * frame * joint *features_in
+        self.latent = self.enc(self.motion, self.true_offset_enc) # batch_size * frame/nnn * joint *features_in 
+        
         # fake res
-        # print("offset idx: ", self.offset_idx, type(self.offset_idx))
-        # print("n_topo: ", self.n_topologies, type(self.n_topologies))
 
         offset_idx = int(self.offset_idx)
-        if self.offset_idx == 0:
+        if offset_idx == 0:
             self.fake_idx = torch.randint(1, self.n_topologies, [1])
-        elif self.offset_idx == self.n_topologies-1:
+        elif offset_idx == self.n_topologies-1:
             self.fake_idx = torch.randint(0, offset_idx, [1])
         else:
-            # print("torch.rand")
             if torch.rand([1]) < 0.5:
                 self.fake_idx = torch.randint(0, offset_idx, [1])
             else:
                 self.fake_idx = torch.randint(offset_idx+1, self.n_topologies, [1])
-        
+
         self.fake_offset = self.offset_repr[self.fake_idx]
-        self.fake_offset_latent = torch.concat(self.latent.shape[0]*[self.fake_offset]).unsqueeze(-1)
-
+        self.fake_offset_latent = torch.concat(self.latent.shape[1]*[self.fake_offset.unsqueeze(-1)], dim = 0)
+        self.fake_offset_latent = torch.concat(self.latent.shape[0]*[self.fake_offset_latent.unsqueeze(0)], dim = 0)
+        # print("self.latent: ", self.latent.shape)
+        # print("self.fake_offset_latent: ", self.fake_offset_latent.shape)
         self.fake_res = self.dec(self.latent, self.fake_offset_latent)
-        self.fake_offset_enc = torch.concat(self.fake_res.shape[0]*[self.fake_offset]).unsqueeze(-1)
-        self.fake_pos = torch.concat([self.fake_res, self.fake_offset_enc], dim = 2)
 
+        self.fake_offset_enc = torch.concat(self.fake_res.shape[1]*[self.fake_offset.unsqueeze(-1)], dim=0)
+        self.fake_offset_enc = torch.concat(self.fake_res.shape[0]*[self.fake_offset_enc.unsqueeze(0)], dim=0)
+        self.fake_pos = torch.concat([self.fake_res, self.fake_offset_enc], dim = -1)
+        # print("fake pose: ", self.fake_pos.shape)
         # fake latent 
         self.fake_latent = self.enc(self.fake_res, self.fake_offset_enc)
-        self.this_offset_latent = torch.concat(self.fake_latent.shape[0]*[self.this_offset]).unsqueeze(-1)
-
+        self.true_offset_latent = torch.concat(self.fake_latent.shape[1]*[self.true_offset.unsqueeze(-1).unsqueeze(0)], dim=0)
+        self.true_offset_latent = torch.concat(self.fake_latent.shape[0]*[self.true_offset_latent.unsqueeze(0)], dim=0)
         # resconstruction
-        self.res = self.dec(self.fake_latent, self.this_offset_latent)
-        self.res_pos = torch.concat([self.res, self.this_offset_enc], dim = 2)
+        self.res = self.dec(self.fake_latent, self.true_offset_latent)
+        self.res_pos = torch.concat([self.res, self.true_offset_enc], dim = -1)
 
     def backward_D_basic(self, netD, real, fake):
         """Calculate GAN loss for the discriminator
@@ -117,7 +119,7 @@ class GAN_model(BaseModel):
         self.loss_recoder.add_scalar('gan_loss', self.gan_loss)
         # total loss
         self.loss_G_total = self.rec_loss * self.args.lambda_rec  + \
-                            self.cycle_loss * self.args.lambda_cycle / 2 + \
+                            self.cycle_loss * self.args.lambda_cycle + \
                             self.gan_loss * 1
 
         self.loss_G_total.backward()

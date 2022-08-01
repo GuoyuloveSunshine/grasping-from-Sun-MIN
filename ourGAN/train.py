@@ -36,7 +36,7 @@ def main():
             for i, motion in enumerate(motions):
                 print("epoch: {}, step: {}, i: {}".format(epoch,step,i))
                 model.set_input(motion)
-            model.optimize_parameters()
+                model.optimize_parameters()
 
             if args.verbose:
                 res = model.verbose()

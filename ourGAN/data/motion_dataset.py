@@ -30,7 +30,7 @@ class MotionData(Dataset):
 
         self.data.append(new_windows)
         self.data = torch.cat(self.data)
-        print(self.data.shape)
+        # print(self.data.shape)
         # self.data = self.data.permute(0, 2, 1)
 
 

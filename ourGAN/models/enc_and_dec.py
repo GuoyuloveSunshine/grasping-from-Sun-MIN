@@ -25,14 +25,15 @@ def calculate_adj_matrix(topology):
 class Encoder(nn.Module):
     def __init__(self, args, topology):
         super(Encoder, self).__init__()
+        self.len = len(topology)
         self.c_in_node = args.position_feature
         self.c_out_node = args.position_feature
         self.c_in_edge = args.offset_feature
         self.c_out_edge = args.offset_feature
-        self.c_in_conv = args.position_feature + args.offset_feature
-        self.c_out_conv = args.position_feature + args.offset_feature
+        self.c_in_conv = (args.position_feature + args.offset_feature)*self.len
+        self.c_out_conv = (args.position_feature + args.offset_feature)*self.len
         self.adj_matrix = calculate_adj_matrix(topology)
-        self.len = len(topology)
+        
         # network module
         self.layers = nn.ModuleList()
         self.module = nn.ModuleList()
@@ -54,46 +55,44 @@ class Encoder(nn.Module):
         self.layers.append(nn.Conv1d(self.c_in_conv, self.c_out_conv, padding = 1, kernel_size=4, stride=2))
 
     def forward(self, input, offset):
-        # print("input: ", input.shape)
-        # print("offset: ", offset.shape)
         for i, layer in enumerate(self.layers):
             if i%2 ==0:
-                input = torch.concat([input, offset], dim = 2) # (batch_size, num_joint, xyz + length)
-                input = input.permute(1, 2, 0) # (num_joint, feature_size, batch_size)
-                input = layer(input) # (num_joint, feature_size, batch_size/2)
-                input = input.permute(2, 0, 1)  # (batch_size/2, num_joint, feature_size)
+                # print("encorder: ", i)
+                input = torch.concat([input, offset], dim = -1) # (batch_size, frame, num_joint, xyz + length)
+                batch_size, frame, num_joint, in_feature = input.shape
+                input = input.permute(0, 2, 3, 1) # (batch_size, num_joint, feature_size, frame)
+                input = input.reshape((batch_size, -1, frame)) # (batch_size, num_joint*feature_size, frame)
+                input = layer(input) # (batch_size, num_joint * feature_size, ?)
+                input = input.permute(0, 2, 1)  # (batch_size, frame/2, num_joint * feature_size)
+                input = input.reshape((batch_size, -1, num_joint, in_feature)) # (batch_size, frame/2, num_joint, feature_size)
             else:
-                # print(i, input.shape)
-                input_node = input[:, :, :-1] # (batch_size/2, num_joint, xyz)
-                input_edge = input[:, :, -1] # (batch_size/2, num_joint, offset)
-                batch_size, num_joints, _ = input.shape
-                # print(self.adj_matrix)
-                adj_matrix = torch.cat(batch_size*[self.adj_matrix]).reshape((batch_size, self.len, self.len))
-                # print(adj_matrix.shape)
-                feature_node1 = layer[0](input_node, adj_matrix) # (batch_size/2, num_joint, xyz)
-                feature_node2 = layer[1](input_node, input_edge, adj_matrix) # (batch_size/2, num_joint, xyz)
+                input_node = input[... , :-1] # (batch_size, frame/2, num_joint, xyz)
+                input_edge = input[... , -1].unsqueeze(-1) # (batch_size, frame/2, num_joint, offset)
+                batch_size, frame, _,__ = input.shape
 
-                offset = layer[2](input_node, input_edge, adj_matrix) # (batch_size/2, num_joint, offset)
-                input = torch.concat([feature_node1, feature_node2], dim = 2)  # (batch_size/2, num_joint, xyz*2)
-                
-                input = input.reshape(batch_size * num_joints, -1)
-                input = layer[3](input).reshape(batch_size, num_joints, self.c_out_node) # (batch_size/2, num_joint, xyz) 
-        if input.shape[2] == self.c_out_conv:
-            # print(input.shape)
-            input = input[:, :, :-self.c_out_edge]
+                adj_matrix = torch.cat(batch_size*frame*[self.adj_matrix]).reshape((batch_size, frame, self.len, self.len))
+                feature_node1 = layer[0](input_node, adj_matrix) # (batch_size, frame/2,  num_joint, xyz)
+                feature_node2 = layer[1](input_node, input_edge, adj_matrix) # (batch_size, frame/2, num_joint, xyz)
+
+                offset = layer[2](input_node, input_edge, adj_matrix) # (batch_size, frame/2, num_joint, offset)
+                input = torch.concat([feature_node1, feature_node2], dim = -1)  # (batch_size, frame, num_joint, xyz*2)
+                input = layer[3](input)
+
+        if input.shape[-1] != self.c_out_node:
+            input = input[..., :self.c_out_node]
         return input
 
 class Decoder(nn.Module):
     def __init__(self, args, topology):
         super(Decoder, self).__init__()
+        self.len = len(topology)
         self.c_in_node = args.position_feature
         self.c_out_node = args.position_feature
         self.c_in_edge = args.offset_feature
         self.c_out_edge = args.offset_feature
-        self.c_in_conv = args.position_feature + args.offset_feature
-        self.c_out_conv = args.position_feature + args.offset_feature
+        self.c_in_conv = (args.position_feature + args.offset_feature)*self.len
+        self.c_out_conv = (args.position_feature + args.offset_feature)*self.len
         self.adj_matrix = calculate_adj_matrix(topology)
-        self.len = len(topology)
         # network module
         self.layers = nn.ModuleList()
         self.module = nn.ModuleList()
@@ -117,26 +116,28 @@ class Decoder(nn.Module):
     def forward(self, input, offset):
         for i, layer in enumerate(self.layers):
             if i%2 ==0:
-                input = torch.concat([input, offset], dim = 2) # (batch_size, num_joint, xyz + length)
-                input = input.permute(1, 2, 0) # (num_joint, feature_size, batch_size)
-                input = layer(input) # (num_joint, feature_size, batch_size/2)
-                input = input.permute(2, 0, 1)  # (batch_size/2, num_joint, feature_size)
+                # print("encorder: ", i)
+                input = torch.concat([input, offset], dim = -1) # (batch_size, frame, num_joint, xyz + length)
+                batch_size, frame, num_joint, in_feature = input.shape
+                input = input.permute(0, 2, 3, 1) # (batch_size, num_joint, feature_size, frame)
+                input = input.reshape((batch_size, -1, frame)) # (batch_size, num_joint*feature_size, frame)
+                input = layer(input) # (batch_size, num_joint * feature_size, ?)
+                input = input.permute(0, 2, 1)  # (batch_size, frame/2, num_joint * feature_size)
+                input = input.reshape((batch_size, -1, num_joint, in_feature)) # (batch_size, frame/2, num_joint, feature_size)
             else:
-                # print(i, layer)
-                input_node = input[:, :, :-1] # (batch_size/2, num_joint, xyz)
-                input_edge = input[:, :, -1] # (batch_size/2, num_joint, offset)
-                batch_size, num_joints, _ = input.shape
+                input_node = input[... , :-1] # (batch_size, frame/2, num_joint, xyz)
+                input_edge = input[... , -1].unsqueeze(-1) # (batch_size, frame/2, num_joint, offset)
+                batch_size, frame, _,__ = input.shape
 
-                adj_matrix = torch.cat(batch_size*[self.adj_matrix]).reshape((batch_size, self.len, self.len))
-                feature_node1 = layer[0](input_node, adj_matrix) # (batch_size/2, num_joint, xyz)
-                feature_node2 = layer[1](input_node, input_edge, adj_matrix) # (batch_size/2, num_joint, xyz)
+                adj_matrix = torch.cat(batch_size*frame*[self.adj_matrix]).reshape((batch_size, frame, self.len, self.len))
+                feature_node1 = layer[0](input_node, adj_matrix) # (batch_size, frame/2,  num_joint, xyz)
+                feature_node2 = layer[1](input_node, input_edge, adj_matrix) # (batch_size, frame/2, num_joint, xyz)
 
-                offset = layer[2](input_node, input_edge, adj_matrix) # (batch_size/2, num_joint, offset)
-                input = torch.concat([feature_node1, feature_node2], dim = 2)  # (batch_size/2, num_joint, xyz*2)
-                
-                input = input.reshape(batch_size * num_joints, -1)
-                input = layer[3](input).reshape(batch_size, num_joints, self.c_out_node) # (batch_size/2, num_joint, xyz) 
-        if input.shape[2] == self.c_out_conv:
-            input = input[:, :, :-self.c_out_edge]
+                offset = layer[2](input_node, input_edge, adj_matrix) # (batch_size, frame/2, num_joint, offset)
+                input = torch.concat([feature_node1, feature_node2], dim = -1)  # (batch_size, frame, num_joint, xyz*2)
+                input = layer[3](input)
+
+        if input.shape[-1] != self.c_out_node:
+            input = input[..., :self.c_out_node]
         return input
 

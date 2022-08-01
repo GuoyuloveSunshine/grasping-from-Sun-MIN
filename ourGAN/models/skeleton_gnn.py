@@ -5,11 +5,11 @@ from torch import nn
 
 """
 Inputs:
-    node_feats - Tensor with node features of shape [batch_size, num_joints, c_in]-N*23*3   - normalized position information
-    edge_feats - Tensor with edge features of shape [batch_size, num_offset + one_base, features]- N*23*1  - normalized offset information
-    adj_matrix - Batch of adjacency matrices of the graph. If there is an edge from i to j, adj_matrix[b,i,j]=1 else 0.
+    node_feats - Tensor with node features of shape [batch_size, frame, num_joints, c_in] - batch_size *N*23*3   - normalized position information
+    edge_feats - Tensor with edge features of shape [batch_size, frame, num_offset, features]- batch_size *N*23*1  - normalized offset information
+    adj_matrix - Batch of adjacency matrices of the graph. If there is an edge from i to j, adj_matrix[b,f,i,j]=1 else 0.
                 Supports directed edges by non-symmetric matrices. Assumes to already have added the identity connections.
-                Shape: [batch_size, num_nodes, num_nodes]
+                Shape: [batch_size, frame, num_nodes, num_nodes]
 """
 
 class Node2NodeLayer(nn.Module):
@@ -26,23 +26,25 @@ class Node2NodeLayer(nn.Module):
         # We assume that the diagonal of adj_matrix is empty
         
         # Mean aggregation (try sum maybe ?)
-        num_children = adj_matrix.sum(dim=-1, keepdims=True)
-        num_parents = adj_matrix.transpose(1, 2).sum(dim=-1, keepdims=True)
+        num_children = adj_matrix.sum(dim=-1, keepdims=True) 
+        num_parents = adj_matrix.transpose(-1, -2).sum(dim=-1, keepdims=True)
         num_neighbours = num_children + num_parents + 1
-
-        batch_size, num_joints, c_in_node = node_features.shape
-        node_features = node_features.reshape(batch_size * num_joints, c_in_node)
+        batch_size, frame, num_joints, _ = node_features.shape # (batch_size, frame, num_joints, c_in)
         
         # Parents
-        parent_features = self.parent_linear(node_features).reshape(batch_size, num_joints, self.c_out_node)
-        parent_features = torch.bmm(adj_matrix.transpose(1, 2), parent_features)
-            
+        parent_features = self.parent_linear(node_features)
+        parent_features = parent_features.reshape(-1, num_joints, self.c_out_node) # (batch_size*frame, num_joints, c_in)
+        parent_features = torch.bmm(adj_matrix.transpose(-1, -2).reshape(-1, num_joints, num_joints), parent_features)
+        parent_features = parent_features.reshape(batch_size, frame, num_joints, self.c_out_node)
+        # print('parent features: ', parent_features.shape)
         # Recurrent
-        recurrent_features = self.recurrent(node_features).reshape(batch_size, num_joints, self.c_out_node)
+        recurrent_features = self.recurrent(node_features)
         
         # Children
-        children_features = self.children_linear(node_features).reshape(batch_size, num_joints, self.c_out_node)
-        children_features = torch.bmm(adj_matrix, children_features)
+        children_features = self.children_linear(node_features)
+        children_features = children_features.reshape(-1, num_joints, self.c_out_node) # (batch_size*frame, num_joints, c_in)
+        children_features = torch.bmm(adj_matrix.reshape(-1, num_joints, num_joints), children_features)
+        children_features = children_features.reshape(batch_size, frame, num_joints, self.c_out_node)
 
         # Mean features (possible improvements : other aggregation, weighted sum)
         if aggr=='mean':
@@ -82,23 +84,22 @@ class Node2EdgeLayer(nn.Module):
         
         # Mean aggregation (try sum maybe ?)
         num_children = adj_matrix.sum(dim=-1, keepdims=True)
-        num_parents = adj_matrix.transpose(1, 2).sum(dim=-1, keepdims=True)
+        num_parents = adj_matrix.transpose(-1, -2).sum(dim=-1, keepdims=True)
         num_neighbours = num_children + num_parents + 1
-
-        batch_size, num_joints, _ = node_features.shape
-        node_features = node_features.reshape(batch_size * num_joints, self.c_in_node)
-        edge_features = edge_features.reshape(batch_size * num_joints, self.c_in_edge)
+        batch_size, frame, num_joints, _ = node_features.shape
         
         # Children
-        children_features = self.children_linear(node_features).reshape(batch_size, num_joints, self.c_out_edge)
+        children_features = self.children_linear(node_features)
 
         # Recurrent
-        recurrent_features = self.recurrent(edge_features).reshape(batch_size, num_joints, self.c_out_edge)
+        recurrent_features = self.recurrent(edge_features)
         
         # Parents
-        parent_features = self.parent_linear(node_features).reshape(batch_size, num_joints, self.c_out_edge)
-        parent_features = torch.bmm(adj_matrix.transpose(1, 2), parent_features)
-
+        parent_features = self.parent_linear(node_features)
+        parent_features = parent_features.reshape(-1, num_joints, self.c_out_edge) # (batch_size*frame, num_joints, c_out)
+        parent_features = torch.bmm(adj_matrix.transpose(-1, -2).reshape(-1, num_joints, num_joints), parent_features)
+        parent_features = parent_features.reshape(batch_size, frame, num_joints, self.c_out_edge)
+        
         # Mean features (possible improvements : other aggregation, weighted sum)
         if aggr=='mean':
             edge_features = (parent_features + children_features + recurrent_features) / 3
@@ -108,7 +109,7 @@ class Node2EdgeLayer(nn.Module):
         # Possibly other activation function
         edge_features = torch.sigmoid(edge_features)
         
-        # shape (batch_size, num_joint, c_out_edge)
+        # shape (batch_size, frame, num_joint, c_out_edge)
         return edge_features
 
 class Edge2NodeLayer(nn.Module):
@@ -126,23 +127,22 @@ class Edge2NodeLayer(nn.Module):
         
         # Mean aggregation (try sum maybe ?)
         num_children = adj_matrix.sum(dim=-1, keepdims=True)
-        num_parents = adj_matrix.transpose(1, 2).sum(dim=-1, keepdims=True)
+        num_parents = adj_matrix.transpose(-1, -2).sum(dim=-1, keepdims=True)
         num_neighbours = num_children + num_parents + 1
-
-        batch_size, num_joints, _ = node_features.shape
-        node_features = node_features.reshape(batch_size * num_joints, self.c_in_node)
-        edge_features = edge_features.reshape(batch_size * num_joints, self.c_in_edge)
+        batch_size, frame, num_joints, _ = node_features.shape
         
         # Children
-        children_features = self.children_linear(edge_features).reshape(batch_size, num_joints, self.c_out_node)
-        children_features = torch.bmm(adj_matrix, children_features)
+        children_features = self.children_linear(edge_features)
+        children_features = children_features.reshape(-1, num_joints, self.c_out_node) # (batch_size*frame, num_joints, c_out)
+        children_features = torch.bmm(adj_matrix.reshape(-1, num_joints, num_joints), children_features)
+        children_features = children_features.reshape(batch_size, frame, num_joints, self.c_out_node)
+        
         # Recurrent
-        recurrent_features = self.recurrent(node_features).reshape(batch_size, num_joints, self.c_out_node)
+        recurrent_features = self.recurrent(node_features)
         
         # Parents
-        parent_features = self.parent_linear(edge_features).reshape(batch_size, num_joints, self.c_out_node)
+        parent_features = self.parent_linear(edge_features)
         
-
         # Mean features (possible improvements : other aggregation, weighted sum)
         if aggr=='mean':
             res = (parent_features + children_features + recurrent_features) / num_neighbours

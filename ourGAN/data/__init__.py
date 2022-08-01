@@ -3,11 +3,11 @@ def get_character_names(args):
         """
         Put the name of subdirectory in retargeting/datasets/Mixamo as [[names of group A], [names of group B]]
         """
-        # characters = ['Abe', 'Adam', 'Amy', 'Astra', 'Crypto', 'David', 'Dummy', 
-        #             'Erika Archer', 'Jackie', 'James', 'Jennifer', 'Josh', 'Kate', 
-        #             'Knight D Pelegrini', 'Louise', 'Martha', 'Medea By M', 'Ninja', 
-        #             'Olivia', 'Prisoner B', 'Racer', 'Remy', 'Steve', 'Suzie', 'Y bot']
-        characters = ['Abe', 'Adam', 'Amy']
+        characters = ['Abe', 'Adam', 'Amy', 'Astra', 'Crypto', 'David', 'Dummy', 
+                    'Erika Archer', 'Jackie', 'James', 'Jennifer', 'Josh', 'Kate', 
+                    'Knight D Pelegrini', 'Louise', 'Martha', 'Medea By M', 'Ninja', 
+                    'Olivia', 'Prisoner B', 'Racer', 'Remy', 'Steve', 'Suzie', 'Y bot']
+        # characters = ['Abe', 'Adam', 'Amy']
 
     else:
         """

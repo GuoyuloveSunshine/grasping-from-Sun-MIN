@@ -75,6 +75,7 @@ class MixedData(Dataset):
                 self.length = min(self.length, len(skeleton_idx))
             else:
                 self.length = len(skeleton_idx)
+                # print("this len: ", self.length)
             self.final_data.append(MixedData0(args, datasets.data, skeleton_idx))
 
 
