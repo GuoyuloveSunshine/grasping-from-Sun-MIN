@@ -37,9 +37,9 @@ def get_parser():
     parser.add_argument('--pool_size', type=int, default=50)
     parser.add_argument('--is_train', type=int, default=1)
 
-    parser.add_argument('--epoch_num', type=int, default=20001, help='epoch_num')
+    parser.add_argument('--epoch_num', type=int, default=2001, help='epoch_num')
     parser.add_argument('--epoch_begin', type=int, default=0)
-    parser.add_argument('--lambda_rec', type=float, default=0.5)
+    parser.add_argument('--lambda_rec', type=float, default=5)
     parser.add_argument('--lambda_cycle', type=float, default=0.5)
     # parser.add_argument('--lambda_ee', type=float, default=100)
     # parser.add_argument('--lambda_global_pose', type=float, default=2.5)

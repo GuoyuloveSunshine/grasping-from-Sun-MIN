@@ -36,13 +36,13 @@ def main():
             for i, motion in enumerate(motions):
                 print("epoch: {}, step: {}, i: {}".format(epoch,step,i))
                 model.set_input(motion)
-                model.optimize_parameters()
+            model.optimize_parameters()
 
             if args.verbose:
                 res = model.verbose()
                 print('[{}/{}]\t[{}/{}]\t'.format(epoch, args.epoch_num, step, len(data_loader)), res)
 
-        if epoch % 20 == 0 or epoch == args.epoch_num - 1:
+        if epoch % 200 == 0 or epoch == args.epoch_num - 1:
             model.save()
 
         model.epoch()

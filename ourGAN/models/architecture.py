@@ -1,7 +1,7 @@
 import torch
 import os
 from torch import optim
-from zmq import device
+# from zmq import device
 from models.simple_GAN import Discriminator
 from models.enc_and_dec import Encoder, Decoder
 from models.utils import GAN_loss, ImagePool
@@ -20,7 +20,7 @@ class GAN_model(BaseModel):
         # print("encoder device: ", next(self.enc.parameters()).device)
         # print("decoder device: ", next(self.dec.parameters()).device)
         # print("discriminator device: ", next(self.dis.parameters()).device)
-        self.cuda = next(self.dis.parameters()).device
+        # self.cuda = next(self.dis.parameters()).device
         self.D_para = list(self.dis.parameters())
         self.G_para = list(self.enc.parameters()) +list(self.dec.parameters())
         #train
@@ -91,6 +91,7 @@ class GAN_model(BaseModel):
         # resconstruction
         self.res = self.dec(self.fake_latent, self.true_offset_latent)
         self.res_pos = torch.concat([self.res, self.true_offset_enc], dim = -1)
+        self.motion_pos = torch.concat([self.motion, self.true_offset_enc], dim = -1)
 
     def backward_D_basic(self, netD, real, fake):
         """Calculate GAN loss for the discriminator
@@ -115,7 +116,7 @@ class GAN_model(BaseModel):
     def backward_D(self):
         self.loss_D = 0
         fake = self.fake_pool.query(self.fake_pos)
-        self.loss_D += self.backward_D_basic(self.dis, self.res_pos, fake)
+        self.loss_D += self.backward_D_basic(self.dis, self.motion_pos, fake)
         self.loss_recoder.add_scalar('D_loss_gan', self.loss_D)
 
     def backward_G(self):
@@ -132,7 +133,7 @@ class GAN_model(BaseModel):
         self.loss_G_total = self.rec_loss * self.args.lambda_rec  + \
                             self.cycle_loss * self.args.lambda_cycle + \
                             self.gan_loss * 1
-
+        self.loss_recoder.add_scalar('G_loss_total', self.loss_G_total)
         self.loss_G_total.backward()
 
     def optimize_parameters(self):
@@ -173,6 +174,9 @@ class GAN_model(BaseModel):
             file_name = os.path.join(self.model_save_dir, 'optimizers/{}/{}.pt'.format(self.epoch_cnt, i))
             try_mkdir(os.path.split(file_name)[0])
             torch.save(optimizer.state_dict(), file_name)
+        loss_path = os.path.join(self.model_save_dir,"loss")
+        try_mkdir(loss_path)
+        self.loss_recoder.save(loss_path)
 
     def load(self, epoch=None):
         for i, model in enumerate(self.models):
